@@ -1,18 +1,21 @@
-using Uno.Math;
 namespace Fuse.Synth
 {
 	public class AudioOutput : Node
 	{
 		extern(CIL) Fuse.AudioSink.AudioSink _audioSink;
 
-		double th = 0;
-		extern(CIL) void fillFunction(float[] buffer, int offset, int samples)
+		Oscillator temp = new Oscillator()
 		{
-			for (int i = 0; i < samples; ++i)
+			Amplitude = 0.25f
+		};
+
+		void fillFunction(float[] buffer, int offset, int count)
+		{
+			for (int i = 0; i < count; ++i)
 			{
-				buffer[i + offset] = (float)(Uno.Math.Sin(th) * 0.25);
-				th += 1.0 / 100;
+				buffer[i + offset] = 0;
 			}
+			temp.Render(buffer, offset, count);
 		}
 
 		protected override void OnRooted()
