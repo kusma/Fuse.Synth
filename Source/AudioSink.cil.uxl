@@ -1,0 +1,4 @@
+<Extensions Backend="CIL">
+	<Require Assembly="CIL/Bin/Release/Fuse.AudioSink.dll" />
+	<Require Assembly="CIL/Bin/Release/NAudio.dll" />
+</Extensions>
