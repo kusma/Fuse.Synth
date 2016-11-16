@@ -5,6 +5,8 @@
     "FuseJS"
   ],
   "Includes": [
-    "*"
+    "*",
+    "AndroidAudioSink.h:CHeader:Android",
+    "AndroidAudioSink.cpp:CSource:Android"
   ]
 }
