@@ -11,7 +11,7 @@ namespace Fuse.Synth
 		}
 
 		public FilterType Type { get; set; }
-		public double Frequency { get; set; }
+		public float Frequency { get; set; }
 		public float Resonance { get; set; }
 
 		float lastInput, low, band;
@@ -32,8 +32,8 @@ namespace Fuse.Synth
 			for (int i = 0; i < count; ++i)
 			{
 				float input = data[i];
-				data[i] = (Run((lastInput + input) / 2.0f) + Run(input)) / 2.0f;
-				// data[i] = Run(input);
+				// data[i] = (Run((lastInput + input) / 2.0f) + Run(input)) / 2.0f;
+				data[i] = Run(input);
 				lastInput = input;
 			}
 		}
