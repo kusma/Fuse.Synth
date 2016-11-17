@@ -1,13 +1,24 @@
 <App Background="#777">
+	<JavaScript>
+		var base = 60;
+		var blackNotes = [base + 1, base + 3, base + 6, base + 8, base + 10];
+		var whiteNotes = [base, base + 2, base + 4, base + 5, base + 7, base + 9, base + 11];
+		module.exports = {
+			"blackNotes" : blackNotes,
+			"whiteNotes" : whiteNotes,
+		}
+	</JavaScript>
+
 	<Fuse.Synth.AudioOutput>
 		<Fuse.Synth.Synth ux:Name="_synth">
 			<Fuse.Synth.Voice ux:Template="Voice">
 				<Fuse.Synth.Envelope ux:Binding="VolumeEnvelope" Attack="0.1" Decay="1.0" Sustain="0.0" Release="0.5" />
+				<Fuse.Synth.Filter Type="LowPass" Frequency="8000" Resonance="3" />
 			</Fuse.Synth.Voice>
 		</Fuse.Synth.Synth>
 	</Fuse.Synth.AudioOutput>
 
-	<Rectangle ux:InnerClass="NoteKey" Width="40" Color="White" CornerRadius="5">
+	<Rectangle ux:InnerClass="NoteKey" Width="60" Color="White" CornerRadius="5">
 		<int ux:Property="Note" />
 		<WhilePressed>
 			<Fuse.Synth.NoteOn Target="_synth" Note="{ReadProperty Note}" />
@@ -21,9 +32,9 @@
 	</Rectangle>
 
 	<ClientPanel>
-		<Rectangle ux:Class="EmptySpace" Width="40" />
+		<Rectangle ux:Class="EmptySpace" Width="60" />
 		<StackPanel ItemSpacing="2" Orientation="Horizontal" Alignment="Top" Height="66%">
-			<Translation X="-20" />
+			<Translation X="-30" />
 			<EmptySpace />
 			<NoteKey Color="Black" Note="61" />
 			<NoteKey Color="Black" Note="63" />

@@ -1,4 +1,7 @@
 using Uno;
+using Uno.Collections;
+using Uno.UX;
+
 namespace Fuse.Synth
 {
 	public class Voice : Node
@@ -19,11 +22,22 @@ namespace Fuse.Synth
 
 		public Envelope VolumeEnvelope { get { return _volumeEnvelope; } set { _volumeEnvelope = value; } }
 
+		public IList<Filter> _filters;
+		[UXContent]
+		public IList<Filter> Filters
+		{
+			get
+			{
+				return _filters ?? (_filters = new List<Filter>());
+			}
+		}
+
 		int rendered;
 		bool released;
 		float releaseTime = 0.0f;
 		bool finished;
 
+		float[] _voiceBuffer = new float[32];
 		public void Render(float[] buffer, int offset, int count)
 		{
 			bool shouldFinish = false;
@@ -31,20 +45,35 @@ namespace Fuse.Synth
 			{
 				var freq = 440 * Math.Pow(2, (Note - 69) / 12.0f);
 				int written = 0;
-				while (written < count) {
+				while (written < count)
+				{
 					int samples = Math.Min(count - written, 32);
 
 					float time = rendered / 44100.0f;
 					float vol = released ? VolumeEnvelope.EvaluateRelease(time, releaseTime) : VolumeEnvelope.EvaluateAttackDecay(time);
 
-					if (released && vol < 1e-10)
+					if (time > VolumeEnvelope.Attack && vol < 1e-10)
 					{
 						shouldFinish = true;
 						break;
 					}
-					
+
 					_oscillator.Amplitude = vol * vol * 0.25f;
-					_oscillator.Render(buffer, offset + written, samples, freq);
+
+					// _oscillator.Render(buffer, offset + written, samples, freq);
+
+					for (int i = 0; i < samples; ++i)
+						_voiceBuffer[i] = 0;
+
+					_oscillator.Render(_voiceBuffer, 0, samples, freq);
+
+					if (_filters != null && _filters.Count > 0)
+						foreach (var filter in _filters)
+							filter.Process(_voiceBuffer, samples);
+
+					for (int i = 0; i < samples; ++i)
+						buffer[offset + written + i] += _voiceBuffer[i];
+
 					written += samples;
 					rendered += samples;
 				}
@@ -62,6 +91,7 @@ namespace Fuse.Synth
 
 		void Finish()
 		{
+			debug_log "finishing voice";
 			finished = true;
 
 			if (Finished != null)
