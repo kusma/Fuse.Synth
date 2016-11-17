@@ -1,5 +1,37 @@
-<App>
+<App Background="#777">
 	<Fuse.Synth.AudioOutput>
-		<Fuse.Synth.Voice />
+		<Fuse.Synth.Synth ux:Name="_synth">
+			<Fuse.Synth.Voice ux:Template="Voice" />
+		</Fuse.Synth.Synth>
 	</Fuse.Synth.AudioOutput>
+
+	<Rectangle ux:InnerClass="NoteKey" Width="40" Color="White" CornerRadius="5">
+		<int ux:Property="Note" />
+		<Pressed>
+			<Fuse.Synth.NoteOn Target="_synth" Note="{ReadProperty Note}" />
+		</Pressed>
+	</Rectangle>
+
+	<ClientPanel>
+		<Rectangle ux:Class="EmptySpace" Width="40" />
+		<StackPanel ItemSpacing="2" Orientation="Horizontal" Alignment="Top" Height="66%">
+			<Translation X="-20" />
+			<EmptySpace />
+			<NoteKey Color="Black" Note="61" />
+			<NoteKey Color="Black" Note="63" />
+			<EmptySpace />
+			<NoteKey Color="Black" Note="66" />
+			<NoteKey Color="Black" Note="68" />
+			<NoteKey Color="Black" Note="70" />
+		</StackPanel>
+		<StackPanel Orientation="Horizontal" ItemSpacing="2">
+			<NoteKey Color="White" Note="60" />
+			<NoteKey Color="White" Note="62" />
+			<NoteKey Color="White" Note="64" />
+			<NoteKey Color="White" Note="65" />
+			<NoteKey Color="White" Note="67" />
+			<NoteKey Color="White" Note="69" />
+			<NoteKey Color="White" Note="71" />
+		</StackPanel>
+	</ClientPanel>
 </App>

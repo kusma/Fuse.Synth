@@ -35,18 +35,27 @@ namespace Fuse.Synth
 		}
 
 		uint sample;
-		public void Render(float[] buffer, int offset, int count)
+		public void Render(float[] buffer, int offset, int count, float freq)
 		{
-			uint pitch = 10u << (32 - 12);
+			var period = (freq * 4096) / 44100.0;
+			uint delta = (uint)(period * (1 << (32 - 12)));
+
+			var waveTable = Waveform == WaveformType.Triangle ? _triangleWaveTable : _squareWaveTable;
 			for (int i = 0; i < count; ++i)
 			{
 				uint index = (sample >> (32 - 12)) & 4095;
-				buffer[offset + i] += _triangleWaveTable[(int)index] * Amplitude;
-				sample += pitch;
+				buffer[offset + i] += waveTable[(int)index] * Amplitude;
+				sample += delta;
 			}
+		}
+
+		public enum WaveformType {
+			Triangle,
+			Square
 		}
 
 		public double Frequency { get; set; }
 		public float Amplitude { get; set; }
+		public WaveformType Waveform { get; set; }
 	}
 }

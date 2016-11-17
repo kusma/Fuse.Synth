@@ -4,6 +4,9 @@
     "Fuse",
     "FuseJS"
   ],
+  "Mobile": {
+    "Orientations": "Landscape"
+  },
   "Projects": [
     "../Source/Fuse.Synth.unoproj"
   ],

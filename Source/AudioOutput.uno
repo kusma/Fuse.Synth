@@ -25,11 +25,22 @@ namespace Fuse.Synth
 
 		void fillFunction(float[] buffer, int offset, int count)
 		{
-			Render(buffer, offset, count);
+			try
+			{
+				Render(buffer, offset, count);
+			}
+			catch (Exception e)
+			{
+				debug_log "Unexpected Exception: " + e.ToString();
+			}
 		}
 
 		public override void Render(float[] buffer, int offset, int count)
 		{
+			// clear buffer
+			for (int i = 0; i < count; ++i)
+				buffer[i + offset] = 0;
+
 			if (Source != null)
 				Source.Render(buffer, offset, count);
 		}
