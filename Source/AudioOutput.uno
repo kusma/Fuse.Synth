@@ -1,11 +1,15 @@
 using Uno;
+using Uno.UX;
 using Uno.Compiler.ExportTargetInterop;
 
 namespace Fuse.Synth
 {
 	[Require("Header.Include", "AndroidAudioSink.h")]
-	public class AudioOutput : Node
+	public class AudioOutput : AudioNode
 	{
+		[UXContent]
+		public AudioNode Source { get; set; }
+
 		extern(CIL) Fuse.AudioSink.AudioSink _audioSink;
 
 		[TargetSpecificType]
@@ -19,18 +23,15 @@ namespace Fuse.Synth
 
 		extern(ANDROID) AudioSink _audioSink;
 
-		Oscillator temp = new Oscillator()
-		{
-			Amplitude = 0.25f
-		};
-
 		void fillFunction(float[] buffer, int offset, int count)
 		{
-			for (int i = 0; i < count; ++i)
-			{
-				buffer[i + offset] = 0;
-			}
-			temp.Render(buffer, offset, count);
+			Render(buffer, offset, count);
+		}
+
+		public override void Render(float[] buffer, int offset, int count)
+		{
+			if (Source != null)
+				Source.Render(buffer, offset, count);
 		}
 
 		protected override void OnRooted()

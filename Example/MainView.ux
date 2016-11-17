@@ -1,5 +1,5 @@
 <App>
 	<Fuse.Synth.AudioOutput>
-		
+		<Fuse.Synth.Voice />
 	</Fuse.Synth.AudioOutput>
 </App>
