@@ -1,15 +1,23 @@
 <App Background="#777">
 	<Fuse.Synth.AudioOutput>
 		<Fuse.Synth.Synth ux:Name="_synth">
-			<Fuse.Synth.Voice ux:Template="Voice" />
+			<Fuse.Synth.Voice ux:Template="Voice">
+				<Fuse.Synth.Envelope ux:Binding="VolumeEnvelope" Attack="0.1" Decay="1.0" Sustain="0.0" Release="0.5" />
+			</Fuse.Synth.Voice>
 		</Fuse.Synth.Synth>
 	</Fuse.Synth.AudioOutput>
 
 	<Rectangle ux:InnerClass="NoteKey" Width="40" Color="White" CornerRadius="5">
 		<int ux:Property="Note" />
+		<WhilePressed>
+			<Fuse.Synth.NoteOn Target="_synth" Note="{ReadProperty Note}" />
+		</WhilePressed>
+
+<!--
 		<Pressed>
 			<Fuse.Synth.NoteOn Target="_synth" Note="{ReadProperty Note}" />
 		</Pressed>
+-->
 	</Rectangle>
 
 	<ClientPanel>

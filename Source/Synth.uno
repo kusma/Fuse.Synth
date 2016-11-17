@@ -35,6 +35,16 @@ namespace Fuse.Synth
 			}
 		}
 
+		public void NoteOff(int note)
+		{
+			List<Voice> pendingRemoves = new List<Voice>();
+			foreach (var item in _voices)
+			{
+				if (item.Note == note)
+					item.NoteOff();
+			}
+		}
+
 		void OnVoiceFinished(object sender, EventArgs e)
 		{
 			_pendingRemoves.Add((Voice)sender);
@@ -44,7 +54,7 @@ namespace Fuse.Synth
 		{
 			foreach (var item in _voices)
 				item.Render(buffer, offset, count);
-			
+
 			foreach (var item in _pendingRemoves)
 				_voices.Remove(item);
 			_pendingRemoves.Clear();
