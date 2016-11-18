@@ -1,8 +1,8 @@
 <App Background="#777">
 	<JavaScript>
 		var base = 60;
-		var blackNotes = [base + 1, base + 3, base + 6, base + 8, base + 10];
 		var whiteNotes = [base, base + 2, base + 4, base + 5, base + 7, base + 9, base + 11];
+		var blackNotes = [base + 1, base + 3, -1, base + 6, base + 8, base + 10, -1];
 		module.exports = {
 			"blackNotes" : blackNotes,
 			"whiteNotes" : whiteNotes,
@@ -10,12 +10,15 @@
 	</JavaScript>
 
 	<Fuse.Synth.AudioOutput>
-		<Fuse.Synth.Synth ux:Name="_synth">
-			<Fuse.Synth.Voice ux:Template="Voice">
-				<Fuse.Synth.Envelope ux:Binding="VolumeEnvelope" Attack="0.1" Decay="1.0" Sustain="0.0" Release="0.5" />
-				<Fuse.Synth.Filter Type="LowPass" Frequency="8000" Resonance="3" />
-			</Fuse.Synth.Voice>
-		</Fuse.Synth.Synth>
+<!--		<Fuse.Synth.SoftClipper Softness="0.5"> -->
+			<Fuse.Synth.Synth ux:Name="_synth">
+				<Fuse.Synth.Voice ux:Template="Voice">
+					<Fuse.Synth.Oscillator ux:Binding="PrimaryOscillator" Detune="0" Amplitude="0.25" Waveform="Square" />
+					<Fuse.Synth.Envelope ux:Binding="VolumeEnvelope" Attack="0.1" Decay="1.0" Sustain="0.0" Release="0.5" />
+					<Fuse.Synth.Filter Type="LowPass" Frequency="8000" Resonance="2" />
+				</Fuse.Synth.Voice>
+			</Fuse.Synth.Synth>
+<!--		</Fuse.Synth.SoftClipper> -->
 	</Fuse.Synth.AudioOutput>
 
 	<Rectangle ux:InnerClass="NoteKey" Width="60" Color="White" CornerRadius="5">
@@ -33,24 +36,42 @@
 
 	<ClientPanel>
 		<Rectangle ux:Class="EmptySpace" Width="60" />
-		<StackPanel ItemSpacing="2" Orientation="Horizontal" Alignment="Top" Height="66%">
-			<Translation X="-30" />
-			<EmptySpace />
-			<NoteKey Color="Black" Note="61" />
-			<NoteKey Color="Black" Note="63" />
-			<EmptySpace />
-			<NoteKey Color="Black" Note="66" />
-			<NoteKey Color="Black" Note="68" />
-			<NoteKey Color="Black" Note="70" />
-		</StackPanel>
-		<StackPanel Orientation="Horizontal" ItemSpacing="2">
-			<NoteKey Color="White" Note="60" />
-			<NoteKey Color="White" Note="62" />
-			<NoteKey Color="White" Note="64" />
-			<NoteKey Color="White" Note="65" />
-			<NoteKey Color="White" Note="67" />
-			<NoteKey Color="White" Note="69" />
-			<NoteKey Color="White" Note="71" />
-		</StackPanel>
+		<DockPanel>
+			<Panel Dock="Right" Width="100" Color="Red">
+				<StackPanel>
+					<Rectangle Height="100">
+						<Text Value="Octave Up" />
+					</Rectangle>
+					<Rectangle Height="100">
+						<Text Value="Octave Up" />
+					</Rectangle>
+				</StackPanel>
+			</Panel>
+			<StackPanel ItemSpacing="2" Orientation="Horizontal" Alignment="Top" Height="66%">
+				<Translation X="30" />
+				<Each Items="{blackNotes}">
+					<Match Value="{}">
+						<Case Number="-1">
+							<EmptySpace />
+						</Case>
+						<Case IsDefault="true">
+							<NoteKey Color="Black" Note="{}" />
+						</Case>
+					</Match>
+				</Each>
+	<!--			<EmptySpace />
+				<NoteKey Color="Black" Note="61" />
+				<NoteKey Color="Black" Note="63" />
+				<EmptySpace />
+				<NoteKey Color="Black" Note="66" />
+				<NoteKey Color="Black" Note="68" />
+				<NoteKey Color="Black" Note="70" /> -->
+			</StackPanel>
+			<StackPanel Orientation="Horizontal" ItemSpacing="2">
+				<Each Items="{whiteNotes}">
+					<NoteKey Color="White" Note="{}" />
+				</Each>
+			</StackPanel>
+		</DockPanel>
 	</ClientPanel>
 </App>

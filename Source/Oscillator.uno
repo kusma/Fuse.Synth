@@ -37,9 +37,11 @@ namespace Fuse.Synth
 		uint sample;
 		public void Render(float[] buffer, int offset, int count, float freq)
 		{
+			freq += Detune;
 			var period = (freq * 4096) / 44100.0;
 			uint delta = (uint)(period * (1 << (32 - 12)));
 
+//			debug_log "waveform: " + Waveform;
 			var waveTable = Waveform == WaveformType.Triangle ? _triangleWaveTable : _squareWaveTable;
 			for (int i = 0; i < count; ++i)
 			{
@@ -54,7 +56,7 @@ namespace Fuse.Synth
 			Square
 		}
 
-		public double Frequency { get; set; }
+		public float Detune { get; set; }
 		public float Amplitude { get; set; }
 		public WaveformType Waveform { get; set; }
 	}

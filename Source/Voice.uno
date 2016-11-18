@@ -12,6 +12,8 @@ namespace Fuse.Synth
 			Amplitude = 0.25f
 		};
 
+		public Oscillator PrimaryOscillator { get { return _oscillator; } set { _oscillator = value; } }
+
 		Envelope _volumeEnvelope = new Envelope()
 		{
 			Attack = 0.1f,
