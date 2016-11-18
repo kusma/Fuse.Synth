@@ -26,15 +26,16 @@
 	</JavaScript>
 
 	<Fuse.Synth.AudioOutput>
-<!--		<Fuse.Synth.SoftClipper Softness="0.5"> -->
+		<Fuse.Synth.SoftClipper Softness="0.5">
 			<Fuse.Synth.Synth ux:Name="_synth">
 				<Fuse.Synth.Voice ux:Template="Voice">
-					<Fuse.Synth.Oscillator Detune="0" Amplitude="0.25" Waveform="Triangle" />
+					<Fuse.Synth.Oscillator Detune="0" Amplitude="0.25" Waveform="Square" />
+<!--					<Fuse.Synth.Oscillator Detune="20" Amplitude="0.25" Waveform="Triangle" /> -->
 					<Fuse.Synth.Envelope ux:Binding="VolumeEnvelope" Attack="0.1" Decay="1.0" Sustain="0.0" Release="0.5" />
 					<Fuse.Synth.Filter Type="LowPass" Frequency="8000" Resonance="2" />
 				</Fuse.Synth.Voice>
 			</Fuse.Synth.Synth>
-<!--		</Fuse.Synth.SoftClipper> -->
+		</Fuse.Synth.SoftClipper>
 	</Fuse.Synth.AudioOutput>
 
 	<Rectangle ux:InnerClass="NoteKey" Width="60" Color="White" CornerRadius="5">
