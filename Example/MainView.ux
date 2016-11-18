@@ -1,11 +1,27 @@
 <App Background="#777">
 	<JavaScript>
+		var Observable = require("FuseJS/Observable");
 		var base = 60;
-		var whiteNotes = [base, base + 2, base + 4, base + 5, base + 7, base + 9, base + 11];
-		var blackNotes = [base + 1, base + 3, -1, base + 6, base + 8, base + 10, -1];
+		var whiteNotes = Observable();
+		var blackNotes = Observable();
+		function updateNotes(base) {
+			whiteNotes.replaceAll([base, base + 2, base + 4, base + 5, base + 7, base + 9, base + 11]);
+			blackNotes.replaceAll([base + 1, base + 3, -1, base + 6, base + 8, base + 10, -1]);
+		}
+		updateNotes(base);
+		function octaveUp() {
+			base += 12;
+			updateNotes(base);
+		}
+		function octaveDown() {
+			base -= 12;
+			updateNotes(base);
+		}
 		module.exports = {
 			"blackNotes" : blackNotes,
 			"whiteNotes" : whiteNotes,
+			"octaveUp" : octaveUp,
+			"octaveDown" : octaveDown
 		}
 	</JavaScript>
 
@@ -13,7 +29,7 @@
 <!--		<Fuse.Synth.SoftClipper Softness="0.5"> -->
 			<Fuse.Synth.Synth ux:Name="_synth">
 				<Fuse.Synth.Voice ux:Template="Voice">
-					<Fuse.Synth.Oscillator ux:Binding="PrimaryOscillator" Detune="0" Amplitude="0.25" Waveform="Square" />
+					<Fuse.Synth.Oscillator Detune="0" Amplitude="0.25" Waveform="Triangle" />
 					<Fuse.Synth.Envelope ux:Binding="VolumeEnvelope" Attack="0.1" Decay="1.0" Sustain="0.0" Release="0.5" />
 					<Fuse.Synth.Filter Type="LowPass" Frequency="8000" Resonance="2" />
 				</Fuse.Synth.Voice>
@@ -25,6 +41,7 @@
 		<int ux:Property="Note" />
 		<WhilePressed>
 			<Fuse.Synth.NoteOn Target="_synth" Note="{ReadProperty Note}" />
+			<Change Target="Color" DurationBack="0.1" Value="Blue" />
 		</WhilePressed>
 
 <!--
@@ -37,13 +54,13 @@
 	<ClientPanel>
 		<Rectangle ux:Class="EmptySpace" Width="60" />
 		<DockPanel>
-			<Panel Dock="Right" Width="100" Color="Red">
-				<StackPanel>
-					<Rectangle Height="100">
-						<Text Value="Octave Up" />
+			<Panel Dock="Right" Width="100">
+				<StackPanel Height="220" ItemSpacing="10">
+					<Rectangle Height="100" Color="White" CornerRadius="5" Clicked="{octaveUp}">
+						<Text Value="Octave Up" Alignment="Center" />
 					</Rectangle>
-					<Rectangle Height="100">
-						<Text Value="Octave Up" />
+					<Rectangle Height="100" Color="White" CornerRadius="5" Clicked="{octaveDown}">
+						<Text Value="Octave Down" Alignment="Center" />
 					</Rectangle>
 				</StackPanel>
 			</Panel>
@@ -59,13 +76,6 @@
 						</Case>
 					</Match>
 				</Each>
-	<!--			<EmptySpace />
-				<NoteKey Color="Black" Note="61" />
-				<NoteKey Color="Black" Note="63" />
-				<EmptySpace />
-				<NoteKey Color="Black" Note="66" />
-				<NoteKey Color="Black" Note="68" />
-				<NoteKey Color="Black" Note="70" /> -->
 			</StackPanel>
 			<StackPanel Orientation="Horizontal" ItemSpacing="2">
 				<Each Items="{whiteNotes}">

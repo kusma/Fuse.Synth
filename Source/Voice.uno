@@ -7,12 +7,23 @@ namespace Fuse.Synth
 	public class Voice : Node
 	{
 		public int Note { get; set; }
+/*
 		Oscillator _oscillator = new Oscillator()
 		{
 			Amplitude = 0.25f
 		};
-
 		public Oscillator PrimaryOscillator { get { return _oscillator; } set { _oscillator = value; } }
+*/
+
+		public IList<Oscillator> _oscillators;
+		[UXContent]
+		public IList<Oscillator> Oscillators
+		{
+			get
+			{
+				return _oscillators ?? (_oscillators = new List<Oscillator>());
+			}
+		}
 
 		Envelope _volumeEnvelope = new Envelope()
 		{
@@ -60,14 +71,17 @@ namespace Fuse.Synth
 						break;
 					}
 
-					_oscillator.Amplitude = vol * vol * 0.25f;
 
 					// _oscillator.Render(buffer, offset + written, samples, freq);
 
 					for (int i = 0; i < samples; ++i)
 						_voiceBuffer[i] = 0;
 
-					_oscillator.Render(_voiceBuffer, 0, samples, freq);
+					foreach (var oscillator in _oscillators)
+					{
+						oscillator.Amplitude = vol * vol * 0.25f;
+						oscillator.Render(_voiceBuffer, 0, samples, freq);
+					}
 
 					if (_filters != null && _filters.Count > 0)
 						foreach (var filter in _filters)
